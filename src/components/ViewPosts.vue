@@ -36,10 +36,34 @@ export default {
     },
     methods: {
         editPost(id) {
+            this.showEditPost = true
+            this.editPostId = id
+            for (const entry of this.posts) {
+                if (entry.id == id) {
+                    this.entry = entry.entry 
+                    this.mood = entry.mood
+                }
+            }
             
         },
-        updatePost(event) {
-            
+        async updatePost(event) {
+            try {
+                axios.post(`${this.baseUrl}/updatePost`, 
+            {
+                entry: this.entry,
+                mood: this.mood
+            },
+            {
+            params: {id: this.editPostId}
+            } 
+        )
+        const response = await axios.get(`${this.baseUrl}/posts`);
+        this.posts = response.data
+        this.showEditPost = false
+            }
+        catch (error) {
+            console.error(error)
+            }
         }
     }
 }
@@ -61,7 +85,7 @@ export default {
                     <td>{{ post.id }}</td>
                     <td>{{ post.entry }}</td>
                     <td>{{ post.mood }}</td>
-                    <td><button>Edit</button></td>
+                    <td><button @click="editPost(post.id)">Edit</button></td>
                 </tr>
             </tbody>
 
@@ -82,7 +106,7 @@ export default {
                             <option v-for="mood in moods" :value="mood">{{ mood }}</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Update Post</button>
+                    <button type="submit" class="btn btn-primary" @click.prevent="updatePost">Update Post</button>
                 </form>
             </div>
         </div>
