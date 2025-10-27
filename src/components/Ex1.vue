@@ -13,8 +13,7 @@
                 ],
                 selectedOp: '',
                 x: 0,
-                y: 0
-                
+                y: 0,
             }
         },
         computed: {

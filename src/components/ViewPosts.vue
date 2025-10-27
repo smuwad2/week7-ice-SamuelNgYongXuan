@@ -1,8 +1,6 @@
-<script setup>
-    import axios from 'axios';
-</script>
-
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
@@ -46,24 +44,26 @@ export default {
             }
             
         },
-        async updatePost(event) {
-            try {
-                axios.post(`${this.baseUrl}/updatePost`, 
-            {
+        updatePost() {
+            const postData = {
                 entry: this.entry,
                 mood: this.mood
-            },
-            {
-            params: {id: this.editPostId}
-            } 
-        )
-        const response = await axios.get(`${this.baseUrl}/posts`);
-        this.posts = response.data
-        this.showEditPost = false
-            }
-        catch (error) {
-            console.error(error)
-            }
+            };
+            axios.post(`${this.baseUrl}/updatePost?id=${this.editPostId}`, postData)
+                .then(response => {
+                    console.log('Post updated successfully');
+                   
+                    let updatedPost = this.posts.find(post => post.id == this.editPostId)
+                    updatedPost.entry  = this.entry;
+                    updatedPost.mood = this.mood;
+
+                    this.showEditPost = false; // Hide the edit form after updating
+                    this.entry = ""; // Clear the entry field
+                    this.mood = ""; // Clear the mood field
+                })
+                .catch(error => {
+                    console.error('Error updating post:', error);
+                });
         }
     }
 }
@@ -106,7 +106,7 @@ export default {
                             <option v-for="mood in moods" :value="mood">{{ mood }}</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary" @click.prevent="updatePost">Update Post</button>
+                    <button type="submit" class="btn btn-primary" @click="updatePost">Update Post</button>
                 </form>
             </div>
         </div>
