@@ -1,30 +1,29 @@
 <script>
     export default { 
-        // Add code in appropriate places
         data() {
             return {
                 items: ['keyboard', 'mouse', 'iPhone', 'macbook', 'adapter'],
-                newItem: ""
+                newItem: ''
             }
-            
         },
         methods: {
             add() {
+                // console.log('in add')
                 this.items.push(this.newItem)
+                this.newItem = ''
             }
-
         }
     }
 </script>
 
 <template>
-
     <h2>Shopping Cart</h2>
-    <!-- TODO: Add Code Here -->
-    <ul v-for="(item, indx) in items">
-        <li>{{ item }} <span><button @click="items.splice(indx, 1)">Delete!</button></span></li>
+    <ul>
+        <li v-for="(item, i) in items">
+            {{item}}
+        <button @click="items.splice(i, 1)">Delete!</button> </li>
     </ul>
-    <input type="text" v-model="newItem"></input>
-    <button @click="add">Add!</button>
+    <input @keyup.enter="add" v-model="newItem"/>
+    <button @click="add">Add!</button>    
    
 </template>
